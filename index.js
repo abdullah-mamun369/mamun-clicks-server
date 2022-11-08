@@ -24,6 +24,7 @@ const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology:
 async function run() {
     try {
         const serviceCollection = client.db('photography').collection('services');
+        const purchaseCollection = client.db('photography').collection('purchase');
 
         app.get('/services', async (req, res) => {
             const query = {};
@@ -37,7 +38,30 @@ async function run() {
             const query = { _id: ObjectId(id) };
             const service = await serviceCollection.findOne(query);
             res.send(service);
-        })
+        });
+
+        // Purchase Started============================
+
+        // app.get('/purchase', async (req, res) => {
+        //     let query = {};
+
+        //     if (req.query.email) {
+        //         query = {
+        //             email: req.query.email
+        //         }
+        //     }
+
+        //     const cursor = purchaseCollection.find(query);
+        //     const purchase = await cursor.toArray();
+        //     res.send(purchase);
+        // });
+
+        app.post('/purchase', async (req, res) => {
+            const purchase = req.body;
+            console.log(purchase);
+            const result = await purchaseCollection.insertOne(purchase);
+            res.send(result);
+        });
 
     }
 
