@@ -42,19 +42,19 @@ async function run() {
 
         // Purchase Started============================
 
-        // app.get('/purchase', async (req, res) => {
-        //     let query = {};
+        app.get('/purchase', async (req, res) => {
+            let query = {};
 
-        //     if (req.query.email) {
-        //         query = {
-        //             email: req.query.email
-        //         }
-        //     }
+            if (req.query.email) {
+                query = {
+                    email: req.query.email
+                }
+            }
 
-        //     const cursor = purchaseCollection.find(query);
-        //     const purchase = await cursor.toArray();
-        //     res.send(purchase);
-        // });
+            const cursor = purchaseCollection.find(query);
+            const purchase = await cursor.toArray();
+            res.send(purchase);
+        });
 
         app.post('/purchase', async (req, res) => {
             const purchase = req.body;
@@ -62,6 +62,26 @@ async function run() {
             const result = await purchaseCollection.insertOne(purchase);
             res.send(result);
         });
+
+        app.patch('/purchase/:id', async (req, res) => {
+            const id = req.params.id;
+            const status = req.body.status
+            const query = { _id: ObjectId(id) }
+            const updatedDoc = {
+                $set: {
+                    status: status
+                }
+            }
+            const result = await purchaseCollection.updateOne(query, updatedDoc);
+            res.send(result);
+        })
+
+        app.delete('/purchase/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) };
+            const result = await purchaseCollection.deleteOne(query);
+            res.send(result);
+        })
 
     }
 
