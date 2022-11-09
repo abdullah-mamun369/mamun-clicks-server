@@ -92,20 +92,20 @@ async function run() {
             res.send(purchase);
         });
 
-        // // Review get in user page
-        // app.get('/reviews', async (req, res) => {
-        //     let query = {};
+        // Review get in user page
+        app.get('/reviews', async (req, res) => {
+            let query = {};
 
-        //     if (req.query.email) {
-        //         query = {
-        //             email: req.query.email
-        //         }
-        //     }
+            if (req.query.email) {
+                query = {
+                    email: req.query.email
+                }
+            }
 
-        //     const cursor = purchaseCollection.find(query);
-        //     const purchase = await cursor.toArray();
-        //     res.send(purchase);
-        // });
+            const cursor = reviewCollection.find(query);
+            const review = await cursor.toArray();
+            res.send(review);
+        });
 
 
 
