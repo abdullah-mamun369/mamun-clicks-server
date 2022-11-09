@@ -116,12 +116,6 @@ app.listen(port, () => {
 
 //         const serviceCollection = client.db('photography').collection('services');
 
-//         app.get('/users', async (req, res) => {
-//             const query = {};
-//             const cursor = userCollection.find(query);
-//             const users = await cursor.toArray();
-//             res.send(users);
-//         });
 
 //         app.get('/users/:id', async (req, res) => {
 //             const id = req.params.id;
