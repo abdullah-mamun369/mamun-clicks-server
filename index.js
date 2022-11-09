@@ -24,11 +24,15 @@ const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology:
 async function run() {
     try {
         const serviceCollection = client.db('photography').collection('services');
+
         const purchaseCollection = client.db('photography').collection('purchase');
+
+        const reviewCollection = client.db('photography').collection('reviews');
 
         app.get('/services', async (req, res) => {
             const query = {};
             const cursor = serviceCollection.find(query);
+
             const services = await cursor.limit(3).toArray();
             res.send(services);
         });
@@ -42,6 +46,15 @@ async function run() {
 
         // Purchase Started============================
 
+        // order post
+        app.post('/purchase', async (req, res) => {
+            const purchase = req.body;
+            console.log(purchase);
+            const result = await purchaseCollection.insertOne(purchase);
+            res.send(result);
+        });
+
+        // Order get by filter
         app.get('/purchase', async (req, res) => {
             let query = {};
 
@@ -56,12 +69,46 @@ async function run() {
             res.send(purchase);
         });
 
-        app.post('/purchase', async (req, res) => {
-            const purchase = req.body;
-            console.log(purchase);
-            const result = await purchaseCollection.insertOne(purchase);
+        // Review Post
+        app.post('/reviews', async (req, res) => {
+            const review = req.body;
+            console.log(review);
+            const result = await reviewCollection.insertOne(review);
             res.send(result);
         });
+
+        // Review get in product page
+        app.get('/reviews', async (req, res) => {
+            let query = {};
+
+            if (req.query.service) {
+                query = {
+                    service: req.query.service
+                }
+            }
+
+            const cursor = reviewCollection.find(query);
+            const purchase = await cursor.toArray();
+            res.send(purchase);
+        });
+
+        // // Review get in user page
+        // app.get('/reviews', async (req, res) => {
+        //     let query = {};
+
+        //     if (req.query.email) {
+        //         query = {
+        //             email: req.query.email
+        //         }
+        //     }
+
+        //     const cursor = purchaseCollection.find(query);
+        //     const purchase = await cursor.toArray();
+        //     res.send(purchase);
+        // });
+
+
+
 
         app.patch('/purchase/:id', async (req, res) => {
             const id = req.params.id;
