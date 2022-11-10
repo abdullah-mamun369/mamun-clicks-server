@@ -156,18 +156,18 @@ async function run() {
 
 
 
-        app.patch('/purchase/:id', async (req, res) => {
-            const id = req.params.id;
-            const status = req.body.status
-            const query = { _id: ObjectId(id) }
-            const updatedDoc = {
-                $set: {
-                    status: status
-                }
-            }
-            const result = await purchaseCollection.updateOne(query, updatedDoc);
-            res.send(result);
-        })
+        // app.patch('/purchase/:id', async (req, res) => {
+        //     const id = req.params.id;
+        //     const status = req.body.status
+        //     const query = { _id: ObjectId(id) }
+        //     const updatedDoc = {
+        //         $set: {
+        //             status: status
+        //         }
+        //     }
+        //     const result = await purchaseCollection.updateOne(query, updatedDoc);
+        //     res.send(result);
+        // })
 
 
         // Order Delete=================================
@@ -179,6 +179,13 @@ async function run() {
             res.send(result);
         })
 
+
+        //Add Service=============================
+        app.post('/services', async (req, res) => {
+            const user = req.body;
+            const result = await serviceCollection.insertOne(user);
+            res.send(result)
+        });
     }
 
     finally {
