@@ -33,7 +33,7 @@ async function run() {
             const query = {};
             const cursor = serviceCollection.find(query);
 
-            const services = await cursor.limit(3).toArray();
+            const services = await cursor.toArray();
             res.send(services);
         });
 
