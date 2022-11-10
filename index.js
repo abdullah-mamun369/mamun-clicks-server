@@ -92,6 +92,14 @@ async function run() {
             res.send(purchase);
         });
 
+        // Review get by id
+        app.get('/reviews/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) };
+            const user = await reviewCollection.findOne(query);
+            res.send(user);
+        })
+
         // Review get in user page
         app.get('/reviews', async (req, res) => {
             let query = {};
@@ -106,6 +114,44 @@ async function run() {
             const review = await cursor.toArray();
             res.send(review);
         });
+
+        // Review Delete=================================
+        app.delete('/reviews/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) };
+            const result = await reviewCollection.deleteOne(query);
+            res.send(result);
+        })
+
+
+        // Review Update ======================
+        app.patch('/reviews/:id', async (req, res) => {
+            const id = req.params.id;
+            const filter = { _id: ObjectId(id) };
+            const newReview = req.body;
+            console.log(newReview);
+            const option = { upsert: true };
+            const updatedReview = {
+                $set: {
+                    reviewMessage: newReview.reviewMessage,
+                }
+            }
+            const result = await reviewCollection.updateOne(filter, updatedReview, option);
+            res.send(result);
+        })
+
+        // app.patch('/reviews/:id', async (req, res) => {
+        //     const id = req.params.id;
+        //     const status = req.body.status
+        //     const query = { _id: ObjectId(id) }
+        //     const updatedDoc = {
+        //         $set: {
+        //             status: status
+        //         }
+        //     }
+        //     const result = await orderCollection.updateOne(query, updatedDoc);
+        //     res.send(result);
+        // })
 
 
 
@@ -123,9 +169,12 @@ async function run() {
             res.send(result);
         })
 
+
+        // Order Delete=================================
         app.delete('/purchase/:id', async (req, res) => {
             const id = req.params.id;
             const query = { _id: ObjectId(id) };
+            console.log(id);
             const result = await purchaseCollection.deleteOne(query);
             res.send(result);
         })
